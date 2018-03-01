@@ -14,16 +14,19 @@ contract GoodAuction is AuctionInterface {
         reassignment. Must return false on failure and
         allow people to retrieve their funds  */
     function bid() payable external returns(bool) {
-        // YOUR CODE HERE
         if (msg.value > highestBid) {
-            assert((refunds[highestBidder] + highestBid) >= highestBid);
-            refunds[highestBidder] += highestBid;
-            highestBid = msg.value;
-            highestBidder = msg.sender;
-            return true;
+        	if ((refunds[highestBidder] + highestBid) >= highestBid) {
+        		refunds[highestBidder] += highestBid;
+            	highestBid = msg.value;
+            	highestBidder = msg.sender;
+            	return true;
+        	} else {
+        		return false;
+        	}
         } else {
-            assert((refunds[msg.sender] + msg.value) >= msg.value);
-            refunds[msg.sender] += msg.value;
+        	if ((refunds[msg.sender] + msg.value) >= msg.value) {
+				refunds[msg.sender] += msg.value;
+			}
             return false;
         }
     }
@@ -33,11 +36,13 @@ contract GoodAuction is AuctionInterface {
         return of owed funds and false on failure
         or no funds owed.  */
     function withdrawRefund() external returns(bool) {
-        // YOUR CODE HERE
         if (refunds[msg.sender] > 0) {
             refunds[msg.sender] = 0;
-            msg.sender.transfer(refunds[msg.sender]);
-            return true;
+            if (msg.sender.send(refunds[msg.sender])) {
+            	return true;
+            } else {
+            	return false;
+            }
         }
         return false;
     }
@@ -54,8 +59,9 @@ contract GoodAuction is AuctionInterface {
         and applying it to the reduceBid function
         you fill in below. */
     modifier canReduce() {
-        require(msg.sender == highestBidder);
-        require(highestBid > 1);
+    	if ((msg.sender != highestBidder) || (highestBid <= 1)) {
+    		return;
+    	}
         _;
     }
 
@@ -65,7 +71,7 @@ contract GoodAuction is AuctionInterface {
         current highest bidder only to reduce their bid amount */
     function reduceBid() external canReduce() {
         highestBid -= 1;
-        highestBidder.transfer(1);
+        highestBidder.send(1);
     }
 
 
@@ -77,8 +83,6 @@ contract GoodAuction is AuctionInterface {
         How do we send people their money back?  */
 
     function () payable public {
-        // YOUR CODE HERE
-        msg.sender.transfer(msg.value);
-        revert();
+        msg.sender.send(msg.value);
     }
 }

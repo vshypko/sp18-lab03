@@ -13,14 +13,16 @@ contract BadAuction is AuctionInterface {
      * their funds back
      */
     function bid() payable external returns (bool) {
-        // YOUR CODE HERE
         if (msg.value > highestBid) {
-            highestBidder.transfer(highestBid);
-            highestBid = msg.value;
-            highestBidder = msg.sender;
-            return true;
+        	if (highestBidder.send(highestBid)) {
+        		highestBid = msg.value;
+            	highestBidder = msg.sender;
+            	return true;
+        	} else {
+        		return false;
+        	}
         } else {
-            msg.sender.transfer(msg.value);
+            msg.sender.send(msg.value);
             return false;
         }
     }
@@ -33,12 +35,8 @@ contract BadAuction is AuctionInterface {
         implement the function properly in GoodAuction.sol  */
 
     function reduceBid() external {
-        if (highestBid >= 0) {
-            highestBid = highestBid - 1;
-            require(highestBidder.send(1));
-        } else {
-            revert();
-        }
+    	highestBid -= 1;
+        highestBidder.send(1);
     }
 
 
@@ -50,9 +48,7 @@ contract BadAuction is AuctionInterface {
         How do we send people their money back?  */
 
     function () payable public {
-        // YOUR CODE HERE
-        msg.sender.transfer(msg.value);
-        revert();
+        msg.sender.send(msg.value);
     }
 
 }
