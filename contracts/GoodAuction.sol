@@ -11,7 +11,7 @@ contract GoodAuction is AuctionInterface {
 
     /*  Bid function, now shifted to pull paradigm
         Must return true on successful send and/or bid, bidder
-        reassignment. Must return false on failure and 
+        reassignment. Must return false on failure and
         allow people to retrieve their funds  */
     function bid() payable external returns(bool) {
         // YOUR CODE HERE
@@ -28,13 +28,14 @@ contract GoodAuction is AuctionInterface {
         }
     }
 
-    /*  Implement withdraw function to complete new 
-        pull paradigm. Returns true on successful 
+    /*  Implement withdraw function to complete new
+        pull paradigm. Returns true on successful
         return of owed funds and false on failure
         or no funds owed.  */
     function withdrawRefund() external returns(bool) {
         // YOUR CODE HERE
         if (refunds[msg.sender] > 0) {
+            refunds[msg.sender] = 0;
             msg.sender.transfer(refunds[msg.sender]);
             return true;
         }
@@ -50,7 +51,7 @@ contract GoodAuction is AuctionInterface {
 
 
     /*  Consider implementing this modifier
-        and applying it to the reduceBid function 
+        and applying it to the reduceBid function
         you fill in below. */
     modifier canReduce() {
         require(msg.sender == highestBidder);

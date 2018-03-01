@@ -27,7 +27,7 @@ contract BadAuction is AuctionInterface {
 
 
     /*  Reduce bid function. Vulnerable to attack.
-        Allows current highest bidder to reduce 
+        Allows current highest bidder to reduce
         their bid by 1. Do NOT make changes here.
         Instead notice the vulnerabilities, and
         implement the function properly in GoodAuction.sol  */
