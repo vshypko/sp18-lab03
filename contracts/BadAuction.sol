@@ -35,8 +35,8 @@ contract BadAuction is AuctionInterface {
         implement the function properly in GoodAuction.sol  */
 
     function reduceBid() external {
-    	highestBid -= 1;
-        highestBidder.send(1);
+        highestBid -= 1;
+        require(highestBidder.send(1));
     }
 
 
