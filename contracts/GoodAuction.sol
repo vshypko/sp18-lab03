@@ -20,8 +20,6 @@ contract GoodAuction is AuctionInterface {
             	highestBid = msg.value;
             	highestBidder = msg.sender;
             	return true;
-        	} else {
-        		return false;
         	}
         } else {
         	if ((refunds[msg.sender] + msg.value) >= msg.value) {

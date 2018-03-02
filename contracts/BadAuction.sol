@@ -18,13 +18,10 @@ contract BadAuction is AuctionInterface {
         		highestBid = msg.value;
             	highestBidder = msg.sender;
             	return true;
-        	} else {
-        		return false;
         	}
-        } else {
-            msg.sender.send(msg.value);
-            return false;
         }
+        msg.sender.send(msg.value);
+        return false;
     }
 
 
